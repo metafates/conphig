@@ -7,10 +7,12 @@ import (
 
 var registeredFields []RegisteredField
 
+// Registered returns all registered fields
 func Registered() []RegisteredField {
 	return registeredFields
 }
 
+// RegisteredField is a field that has been created
 type RegisteredField struct {
 	defaultValue any
 	validate     func() error

@@ -28,6 +28,9 @@ var FooBar = conphig.New[string](
 )
 ```
 
+> [!NOTE]  
+> Work in progress, API may change
+
 ## How to use
 
 Conphig extends awesome [koanf](https://github.com/knadh/koanf) library.
