@@ -17,6 +17,7 @@ type RegisteredField struct {
 	defaultValue any
 	validate     func() error
 	adjust       func() error
+	convert      func() error
 	key          string
 	description  string
 }

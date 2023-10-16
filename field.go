@@ -4,30 +4,32 @@ type Value interface {
 	~bool | ~int | ~string
 }
 
-type Field[T Value] struct {
+type Field[T Value, G any] struct {
 	key          string
-	defaultValue T
-	adjust       func(value T) (T, error)
-	validate     func(value T) error
+	defaultValue G
+	convert      func(T) (G, error)
+	adjust       func(value G) (G, error)
+	validate     func(value G) error
 	description  string
+	value        G
 }
 
-func (f Field[T]) Key() string {
+func (f Field[T, G]) Key() string {
 	return f.key
 }
 
-func (f Field[T]) Value() T {
+func (f Field[T, G]) Value() G {
 	if koanfInstance == nil {
 		return f.defaultValue
 	}
 
-	return koanfInstance.Get(f.key).(T)
+	return f.value
 }
 
-func (f Field[T]) DefaultValue() T {
+func (f Field[T, G]) DefaultValue() G {
 	return f.defaultValue
 }
 
-func (f Field[T]) Description() string {
+func (f Field[T, G]) Description() string {
 	return f.description
 }

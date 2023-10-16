@@ -5,10 +5,11 @@
 A better way to manage Go apps configuration
 
 ```go
-var PositiveInteger = conphig.New[int](
+var PositiveInteger = conphig.New[int, int](
 	"positive_integer",
 	42,
-	conphig.WithDescription[int]("Positive integer > 0"),
+	conphig.ID[int],
+	conphig.WithDescription[int, int]("Positive integer > 0"),
 	conphig.WithValidateFunc[int](func(i int) error {
 		if i <= 0 {
 			return fmt.Errorf("expected >= 0, got %d", i)
@@ -18,13 +19,22 @@ var PositiveInteger = conphig.New[int](
 	}),
 )
 
-var FooBar = conphig.New[string](
+var FooBar = conphig.New[string, string](
 	"foobar",
 	"${EDITOR}, $USER and $HOME",
-	conphig.WithDescription[string]("String with env variables"),
-	conphig.WithAdjustFunc[string](func(s string) (string, error) {
+	conphig.ID[string],
+	conphig.WithDescription[string, string]("String with env variables"),
+	conphig.WithAdjustFunc[string, string](func(s string) (string, error) {
 		return os.ExpandEnv(s), nil
 	}),
+)
+
+var Time = conphig.New[string, time.Time](
+	"time",
+	time.Now(),
+	func(s string) (time.Time, error) {
+		return time.Parse(time.Kitchen, s)
+	},
 )
 ```
 

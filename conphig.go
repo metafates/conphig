@@ -8,12 +8,16 @@ import (
 
 var koanfInstance *koanf.Koanf
 
+func ID[T any](t T) (T, error) {
+	return t, nil
+}
+
 type Loader func(k *koanf.Koanf) error
 
 func Load(delim string, loaders ...Loader) error {
 	koanfInstance = koanf.NewWithConf(koanf.Conf{
 		Delim:       delim,
-		StrictMerge: true,
+		StrictMerge: false,
 	})
 
 	for _, field := range registeredFields {
@@ -27,6 +31,10 @@ func Load(delim string, loaders ...Loader) error {
 	}
 
 	for _, field := range registeredFields {
+		if err := field.convert(); err != nil {
+			return err
+		}
+
 		if err := field.adjust(); err != nil {
 			return fmt.Errorf("%s: %w", field.key, err)
 		}
